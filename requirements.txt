@@ -1,7 +1,7 @@
 fastapi
 uvicorn[standard]
-dracopy
+#dracopy
 python-dotenv
 PyJWT
 cryptography
-pymeshfix
+#pymeshfix

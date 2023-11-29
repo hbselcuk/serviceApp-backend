@@ -29,6 +29,7 @@ class VerifyToken:
         # This gets the JWKS from a given URL and does processing so you can
         # use any of the keys available
         jwks_url = f"{self.config.auth0_issuer}/protocol/openid-connect/certs"
+        
         self.jwks_client = jwt.PyJWKClient(jwks_url)
 
     async def verify(
