@@ -2,3 +2,4 @@ token.txt
 .env
 .pyc
 db_conn.py
+test.py

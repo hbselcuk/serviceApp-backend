@@ -9,8 +9,8 @@ class DemoData(BaseModel):
     test_string: str
 
 router = APIRouter(
-    prefix="/demo",
-    tags=["demo"],
+    prefix="/restAPI",
+    tags=["restAPI"],
     responses={404: {"description": "Not found"}},
 )
 
