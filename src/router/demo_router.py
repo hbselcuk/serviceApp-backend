@@ -20,15 +20,16 @@ async def demo_post(data: DemoData):
 
 
 class getStuffData(BaseModel):
-    param_0: str
+    param_0: int
     param_1: int
     param_2: int
 
 # ids = json.dumps({"0":"getstuff","1":"10","2":"0"})
 
-@router.post("/getStuff/")
+@router.post("/doStuff/")
 async def getData(data: getStuffData):
-    pgData = getPGData((data.param_0, str(data.param_1), [str(data.param_2)]))
+    pgData = getPGData([str(data.param_0)], [str(data.param_1)], [str(data.param_2)])
+    #pgData = getPGData((str(data.param_1), [str(data.param_2)]))
     #pgData = getPGData("getstuff", 10, 0)
     return pgData
 
