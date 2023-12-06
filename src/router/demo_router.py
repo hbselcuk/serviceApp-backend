@@ -7,6 +7,7 @@ import json
 
 class DemoData(BaseModel):
     test_string: str
+    test_int: int
 
 router = APIRouter(
     prefix="/restAPI",
@@ -16,8 +17,8 @@ router = APIRouter(
 
 @router.post("/")
 async def demo_post(data: DemoData):
-    return {"test_string": data.test_string}
-
+    test = {"what":"it's a test"}
+    return test
 
 class getStuffData(BaseModel):
     param_0: int
@@ -28,8 +29,8 @@ class getStuffData(BaseModel):
 
 @router.post("/doStuff/")
 async def getData(data: getStuffData):
-    pgData = getPGData([str(data.param_0)], [str(data.param_1)], [str(data.param_2)])
+    pgData = getPGData([data.param_0], [str(data.param_1)], [str(data.param_2)])
     #pgData = getPGData((str(data.param_1), [str(data.param_2)]))
     #pgData = getPGData("getstuff", 10, 0)
-    return pgData
+    return json.dumps(pgData)
 

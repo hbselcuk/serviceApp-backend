@@ -7,7 +7,7 @@ base_url = "http://localhost:8000"  # Update with your actual FastAPI server URL
 
 # Define the data you want to send in the POST request
 data = {
-    "param_0": "getstuff",
+    "param_0": 100,
     "param_1": 10,
     "param_2": 0
 }
