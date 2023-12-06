@@ -29,7 +29,8 @@ class getStuffData(BaseModel):
 
 @router.post("/doStuff/")
 async def getData(data: getStuffData):
-    pgData = getPGData([data.param_0], [str(data.param_1)], [str(data.param_2)])
+    print ([data.param_0], [str(data.param_1)], [str(data.param_2)])
+    pgData = getPGData(data.param_0, str(data.param_1), str(data.param_2))
     #pgData = getPGData((str(data.param_1), [str(data.param_2)]))
     #pgData = getPGData("getstuff", 10, 0)
     return json.dumps(pgData)
