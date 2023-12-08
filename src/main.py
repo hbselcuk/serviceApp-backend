@@ -34,5 +34,4 @@ def private_scoped(auth_result: str = Security(auth.verify, scopes=["read:messag
     """A valid access token and an appropriate scope are required to access
     this route
     """
-
     return auth_result
