@@ -1,14 +1,14 @@
 from fastapi import FastAPI, Security
 from fastapi.middleware.cors import CORSMiddleware
 
-from router.demo_router import router as demo_router
+from router.restapi_router import router as restapi_router
 from modules.auth.utils import VerifyToken
 
 auth = VerifyToken()
 
 def create_app():
     app = FastAPI()
-    app.include_router(demo_router, dependencies=[Security(auth.verify)])
+    app.include_router(restapi_router, dependencies=[Security(auth.verify)])
 
     app.add_middleware(
         CORSMiddleware,

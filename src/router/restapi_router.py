@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict
 
-from db_conn import *
+from _db_conn import *
 
 import json
 
@@ -33,6 +33,10 @@ class doStuffData(BaseModel):
     param_2: int
     brian: str
 
+class getS3Data(BaseModel):
+    param_0: int
+
+
 # ids = json.dumps({"0":"getstuff","1":"10","2":"0"})
 
 @router.post("/getStuff/")
@@ -46,4 +50,10 @@ async def doStuff(data: doStuffData):
     pgData = doStuffWithData(data.param_0, str(data.param_1), "'"+(data.brian)+"'",  str(data.param_2))
     #return pgData
     return JSONResponse(content=json.dumps(pgData), media_type="application/json")
+
+@router.post("/getS3/")
+async def getS3(data: getS3Data):
+    print (data.param_0)
+    s3Data = "request received"
+    return s3Data
 
