@@ -40,6 +40,7 @@ def checkAccessKeys():
 # Call the function to check access keys
 #checkAccessKeys()
 
+################## list, get and upload objects #######################
 
 def listObjects(bucket_name):
     try:
@@ -70,6 +71,24 @@ def getObject(bucket_name, object_key):
             print("The specified object does not exist.")
         else:
             print("An error occurred:", e)
+
+##################### Pre-signed-URL ############################
+
+s3Client = boto3.client('s3')
+
+def generatePresignedUrl(bucket_name, object_key, expiration=3600):
+    try:
+        # Generate a pre-signed URL for the specified object
+        response = s3Client.generate_presigned_url('get_object',
+                                             Params={'Bucket': bucket_name, 'Key': object_key},
+                                             ExpiresIn=expiration,
+                                             )
+        return response
+    except Exception as e:
+        print("An error occurred:", e)
+
+
+
 
 ######################################################################
 

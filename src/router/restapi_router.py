@@ -5,7 +5,7 @@ from typing import Dict
 
 from db_conn import *
 
-from s3_conn import listObjects
+from s3_conn import listObjects, generatePresignedUrl
 
 import json
 
@@ -37,6 +37,10 @@ class doStuffData(BaseModel):
 
 class getS3Data(BaseModel):
     param_0: int
+    param_1: str
+    param_2: str
+
+
 
 
 # ids = json.dumps({"0":"getstuff","1":"10","2":"0"})
@@ -58,4 +62,13 @@ async def getS3(data: getS3Data):
     print (data.param_0)
     s3Data = listObjects('mov-dev-bucket')
     return s3Data 
+
+@router.post("/getLink")
+async def getLink(data: getS3Data):
+    pre_signed_url = generatePresignedUrl('mov-dev-bucket', data.param_2)
+    if pre_signed_url:
+        print("Pre-signed URL:", pre_signed_url)
+        return pre_signed_url
+    else:
+        print("Failed to generate pre-signed URL.")
 
