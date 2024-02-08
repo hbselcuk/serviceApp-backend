@@ -38,7 +38,7 @@ class doStuffData(BaseModel):
 class getS3Data(BaseModel):
     param_0: int
     param_1: str
-    param_2: str
+    filename: str
 
 
 
