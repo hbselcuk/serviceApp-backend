@@ -2,6 +2,8 @@ import boto3
 from dotenv import load_dotenv, find_dotenv
 
 from botocore.exceptions import ClientError
+import json
+
 
 load_dotenv(find_dotenv())
 print("something is happening!")
@@ -17,6 +19,8 @@ def printBuckets():
 def uploadModel(modelFilePath):
     with open(modelFilePath, 'rb') as data:
         s3.Bucket('mov-dev-bucket').put_object(Key='test/test.jpg', Body=data)
+
+################### maintaining ########################
 
 def checkAccessKeys():
     try:
@@ -36,25 +40,18 @@ def checkAccessKeys():
 # Call the function to check access keys
 #checkAccessKeys()
 
-#printBuckets()
-#s3.list_buckets()
-#s3.Bucket('mov-dev-bucket').list_objects()
-#uploadModel("test/test.jpeg")
-
-#s3 = boto3.client('s3')
-#result = s3.get_bucket_acl(Bucket='mov-dev-bucket')
-#print(result)
 
 def listObjects(bucket_name):
     try:
         # Get the bucket
         bucket = s3.Bucket(bucket_name)
-        
+        bucket_data = []
         # List all objects and folders in the bucket
         print("Objects and folders in the bucket:")
         for obj in bucket.objects.all():
             print(obj.key)
-        
+            bucket_data.append( obj.key )
+        return bucket_data
     except Exception as e:
         print("An error occurred:", e)
 
@@ -76,10 +73,11 @@ def getObject(bucket_name, object_key):
 
 ######################################################################
 
-listObjects('mov-dev-bucket')
+#listObjects('mov-dev-bucket')
 
 #getObject('mov-dev-bucket', '3dup.svg')
 
+#uploadModel("test/test.jpeg")
 
 
 #s3 = boto3.client('s3')

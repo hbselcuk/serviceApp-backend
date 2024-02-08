@@ -3,7 +3,9 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict
 
-from _db_conn import *
+from db_conn import *
+
+from s3_conn import listObjects
 
 import json
 
@@ -54,6 +56,6 @@ async def doStuff(data: doStuffData):
 @router.post("/getS3/")
 async def getS3(data: getS3Data):
     print (data.param_0)
-    s3Data = "request received"
-    return s3Data
+    s3Data = listObjects('mov-dev-bucket')
+    return s3Data 
 
