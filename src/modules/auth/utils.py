@@ -1,7 +1,8 @@
 from typing import Optional
+import requests
 
 import jwt
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import SecurityScopes, HTTPAuthorizationCredentials, HTTPBearer
 
 from modules.auth.config import get_settings
@@ -36,6 +37,7 @@ class VerifyToken:
         self,
         security_scopes: SecurityScopes,
         token: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer()),
+        req: Request = None,
     ):
         if token is None:
             raise UnauthenticatedException
@@ -63,7 +65,11 @@ class VerifyToken:
 
         if len(security_scopes.scopes) > 0:
             self._check_claims(payload, "scope", security_scopes.scopes)
+        userInfoUrl = f"{self.config.auth0_issuer}/protocol/openid-connect/userinfo"
+        r = requests.get(userInfoUrl, headers={"Authorization": f"Bearer {token.credentials}"})
 
+        req.userInfo = r.json()
+        
         return payload
 
     def _check_claims(self, payload, claim_name, expected_value):
@@ -80,3 +86,4 @@ class VerifyToken:
         for value in expected_value:
             if value not in payload_claim:
                 raise UnauthorizedException(detail=f'Missing "{claim_name}" scope')
+

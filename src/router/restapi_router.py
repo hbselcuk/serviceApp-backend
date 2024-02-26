@@ -1,14 +1,17 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict
+from modules.auth.utils import VerifyToken
 
-from db_conn import *
 
-from s3_conn import listObjects, generatePresignedUrl
+from modules.auth.db_conn import *
+
+from s3_conn import listObjects, generatePresignedDownloadUrl, generatePresignedUploadUrl
 
 import json
 
+auth = VerifyToken()
 class DemoData(BaseModel):
     test_string: str
     test_int: int
@@ -36,20 +39,19 @@ class doStuffData(BaseModel):
     brian: str
 
 class getS3Data(BaseModel):
-    param_0: int
-    param_1: str
+    orderId: str
     filename: str
-
-
 
 
 # ids = json.dumps({"0":"getstuff","1":"10","2":"0"})
 
 @router.post("/getStuff/")
-async def getData(data: getStuffData):
+async def getData(data: getStuffData, req: Request):
     print (data.param_0, str(data.param_1), str(data.param_2))
     pgData = getPGData(data.param_0, str(data.param_1), str(data.param_2))
     return json.dumps(pgData)
+    
+
 @router.post("/doStuff/")
 async def doStuff(data: doStuffData):
     print (data.param_0, str(data.param_1), str(data.param_2), data.brian, str(data.param_2))
@@ -57,18 +59,25 @@ async def doStuff(data: doStuffData):
     #return pgData
     return JSONResponse(content=json.dumps(pgData), media_type="application/json")
 
-@router.post("/getS3/")
-async def getS3(data: getS3Data):
-    print (data.param_0)
-    s3Data = listObjects('mov-dev-bucket')
-    return s3Data 
 
-@router.post("/getLink")
-async def getLink(data: getS3Data):
-    pre_signed_url = generatePresignedUrl('mov-dev-bucket', data.param_2)
+@router.post("/getDownloadLink")
+async def getDownloadLink(data: getS3Data):
+    pre_signed_url = generatePresignedDownloadUrl('mov-dev-bucket', f'{data.orderId}/{data.filename}')
+
     if pre_signed_url:
         print("Pre-signed URL:", pre_signed_url)
         return pre_signed_url
     else:
         print("Failed to generate pre-signed URL.")
 
+
+@router.post("/getUploadLink")
+async def getUploadLink(data: getS3Data, req: Request):
+    sub = req.userInfo['sub']
+    pre_signed_url = generatePresignedUploadUrl('mov-dev-bucket', f'{sub}/{data.orderId}/{data.filename}')
+
+    if pre_signed_url:
+        print("Pre-signed URL:", pre_signed_url)
+        return pre_signed_url
+    else:
+        print("Failed to generate pre-signed URL.")
